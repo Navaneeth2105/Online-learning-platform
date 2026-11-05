@@ -64,30 +64,27 @@ Online-Learning-Platform/
 │
 ├── package.json                 # Monorepo root scripts (dev, build, start)
 └── README.md                    # Platform documentation
-```
 
----
-
-## ⚡ Quick Start Guide
-
-### Prerequisites
+ Quick Start Guide
+ 
+Prerequisites
 - [Node.js](https://nodejs.org/) (v18 or higher)
 - npm or yarn
 
-### 1. Installation
+1. Installation
 Install dependencies for both server and client:
 ```bash
 npm run install-all
 ```
 
-### 2. Running in Development Mode
+2. Running in Development Mode
 Start both backend API (`port 5000`) and Vite client (`port 3000`) concurrently:
 ```bash
 npm run dev
 ```
 Open your browser at `http://localhost:3000/`.
 
-### 3. Production Build & Serving
+3. Production Build & Serving
 Build the optimized frontend distribution and start the server:
 ```bash
 npm run build
