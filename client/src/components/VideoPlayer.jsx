@@ -9,14 +9,33 @@ import {
   RotateCcw,
   RotateCw,
   Settings,
+  ExternalLink,
 } from 'lucide-react';
+
+export const getYouTubeEmbedUrl = (url) => {
+  if (!url || typeof url !== 'string') return null;
+  const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+  const match = url.match(regExp);
+  return match && match[1] ? `https://www.youtube.com/embed/${match[1]}?autoplay=0&rel=0` : null;
+};
+
+export const getVimeoEmbedUrl = (url) => {
+  if (!url || typeof url !== 'string') return null;
+  const match = url.match(/(?:vimeo\.com\/(?:video\/)?|player\.vimeo\.com\/video\/)(\d+)/);
+  return match && match[1] ? `https://player.vimeo.com/video/${match[1]}` : null;
+};
 
 export const VideoPlayer = ({ videoUrl, title, onEnded, onTimeUpdate }) => {
   const videoRef = useRef(null);
   const containerRef = useRef(null);
+
+  const youtubeEmbed = getYouTubeEmbedUrl(videoUrl);
+  const vimeoEmbed = getVimeoEmbedUrl(videoUrl);
+
   const playableVideoUrl = videoUrl?.includes('commondatastorage.googleapis.com')
     ? '/videos/lesson-demo.mp4'
     : videoUrl || '/videos/lesson-demo.mp4';
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -30,7 +49,7 @@ export const VideoPlayer = ({ videoUrl, title, onEnded, onTimeUpdate }) => {
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || youtubeEmbed || vimeoEmbed) return;
 
     const handleLoadedMetadata = () => {
       setDuration(video.duration || 0);
@@ -57,7 +76,71 @@ export const VideoPlayer = ({ videoUrl, title, onEnded, onTimeUpdate }) => {
       video.removeEventListener('timeupdate', handleTimeUpdate);
       video.removeEventListener('ended', handleEnded);
     };
-  }, [onEnded, onTimeUpdate]);
+  }, [onEnded, onTimeUpdate, youtubeEmbed, vimeoEmbed, playableVideoUrl]);
+
+  // If YouTube embed URL
+  if (youtubeEmbed) {
+    return (
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          background: '#000000',
+          borderRadius: 'var(--radius-lg)',
+          overflow: 'hidden',
+          boxShadow: 'var(--shadow-lg)',
+          aspectRatio: '16/9',
+        }}
+      >
+        <iframe
+          src={youtubeEmbed}
+          title={title || 'YouTube Video Player'}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            border: 0,
+          }}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
+      </div>
+    );
+  }
+
+  // If Vimeo embed URL
+  if (vimeoEmbed) {
+    return (
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          background: '#000000',
+          borderRadius: 'var(--radius-lg)',
+          overflow: 'hidden',
+          boxShadow: 'var(--shadow-lg)',
+          aspectRatio: '16/9',
+        }}
+      >
+        <iframe
+          src={vimeoEmbed}
+          title={title || 'Vimeo Video Player'}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            border: 0,
+          }}
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
+    );
+  }
 
   const togglePlay = () => {
     if (!videoRef.current) return;

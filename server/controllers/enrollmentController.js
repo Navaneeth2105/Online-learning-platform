@@ -35,6 +35,8 @@ const enrollInCourse = async (req, res, next) => {
 
     enrollment = await Enrollment.create({
       student: req.user._id,
+      studentName: req.user.name,
+      studentEmail: req.user.email,
       course: course._id,
       progress: 0,
       completedLessons: [],
@@ -132,6 +134,8 @@ const updateLessonProgress = async (req, res, next) => {
       // Auto-enroll if accessing
       enrollment = await Enrollment.create({
         student: req.user._id,
+        studentName: req.user.name,
+        studentEmail: req.user.email,
         course: course._id,
       });
       await Course.findByIdAndUpdate(course._id, { $inc: { studentsCount: 1 } });
@@ -344,6 +348,8 @@ const saveLessonNote = async (req, res, next) => {
     if (!enrollment) {
       enrollment = await Enrollment.create({
         student: req.user._id,
+        studentName: req.user.name,
+        studentEmail: req.user.email,
         course: courseId,
       });
     }

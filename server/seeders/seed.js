@@ -106,7 +106,7 @@ const seedData = async () => {
         originalPrice: 7999,
         isFree: false,
         thumbnail: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1000&q=80',
-        previewVideo: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        previewVideo: 'https://youtu.be/F4zr1aMevB4?si=qrzjj_8kejRUd20W',
         instructor: instructor1._id,
         isFeatured: true,
         rating: 4.9,
@@ -129,6 +129,20 @@ const seedData = async () => {
           'Junior developers wanting to transition to full-stack engineering',
           'Students who want to learn by building production-style apps for real use cases',
         ],
+        resources: [
+          {
+            title: 'Complete Course Master Syllabus & Roadmap (PDF)',
+            url: '/uploads/documents/sample-study-guide.pdf',
+            type: 'pdf',
+            size: '850 KB',
+          },
+          {
+            title: 'Full-Stack Starter Code Repository (ZIP)',
+            url: 'https://github.com/facebook/react/archive/refs/tags/v18.3.1.zip',
+            type: 'archive',
+            size: '3.4 MB',
+          },
+        ],
         modules: [
           {
             title: 'Module 1: Foundations of Modern Web & JavaScript',
@@ -138,12 +152,13 @@ const seedData = async () => {
               {
                 title: 'Introduction & Development Environment Setup',
                 type: 'video',
-                duration: '09:30',
-                durationSeconds: 570,
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                duration: '18:40',
+                durationSeconds: 1120,
+                videoUrl: 'https://youtu.be/F4zr1aMevB4?si=qrzjj_8kejRUd20W',
+                videoType: 'youtube',
                 content: 'Set up your coding environment with VS Code, Node.js runtime, Git version control, and essential extensions for full-stack velocity.',
                 isFreePreview: true,
-                resources: [{ title: 'Developer Setup Guide (PDF)', url: 'https://example.com/guide.pdf', type: 'pdf' }],
+                resources: [{ title: 'Developer Setup Guide (PDF)', url: '/uploads/documents/sample-study-guide.pdf', type: 'pdf', size: '1.2 MB' }],
               },
               {
                 title: 'Modern JavaScript: ES6+, Arrow Functions & Destructuring',
@@ -380,7 +395,7 @@ const seedData = async () => {
         originalPrice: 9999,
         isFree: false,
         thumbnail: 'https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=1000&q=80',
-        previewVideo: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        previewVideo: 'https://youtu.be/zjkBMFhNj_g',
         instructor: instructor1._id,
         isFeatured: true,
         rating: 5.0,
@@ -401,6 +416,26 @@ const seedData = async () => {
           'Software engineers wanting to transition into AI Application Engineering',
           'Data scientists seeking to build production-grade LLM applications',
         ],
+        resources: [
+          {
+            title: 'Mastering AI & Large Language Models Architecture Guide (PDF)',
+            url: '/uploads/documents/ai-llm-architecture-guide.pdf',
+            type: 'pdf',
+            size: '2.4 MB',
+          },
+          {
+            title: 'Enterprise RAG & Vector Database Architecture Guide (PDF)',
+            url: '/uploads/documents/rag-vector-db-handbook.pdf',
+            type: 'pdf',
+            size: '3.1 MB',
+          },
+          {
+            title: 'Autonomous AI Agents & LangChain Starter Repository (ZIP)',
+            url: 'https://github.com/langchain-ai/langchain/archive/refs/tags/v0.2.14.zip',
+            type: 'archive',
+            size: '4.8 MB',
+          },
+        ],
         modules: [
           {
             title: 'Module 1: Foundations of LLMs & Prompt Engineering',
@@ -410,22 +445,29 @@ const seedData = async () => {
               {
                 title: 'How Transformer Models Work Under the Hood',
                 type: 'video',
-                duration: '16:40',
-                durationSeconds: 1000,
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                duration: '27:10',
+                durationSeconds: 1630,
+                videoUrl: 'https://www.youtube.com/watch?v=aircAruvnKk',
+                videoType: 'youtube',
                 content: 'Understand tokenization, positional encodings, multi-head self-attention mechanisms, and how modern LLMs predict next-token probabilities.',
                 isFreePreview: true,
-                resources: [{ title: 'Attention Is All You Need Paper Summary (PDF)', url: 'https://example.com/transformer.pdf', type: 'pdf' }],
+                resources: [
+                  { title: 'Attention Is All You Need Research Paper Summary (PDF)', url: '/uploads/documents/ai-llm-architecture-guide.pdf', type: 'pdf', size: '2.4 MB' },
+                  { title: 'Transformer Matrix Math Cheatsheet (PDF)', url: '/uploads/documents/ai-llm-architecture-guide.pdf', type: 'pdf', size: '1.2 MB' },
+                ],
               },
               {
                 title: 'Advanced Prompt Engineering & Chain-of-Thought Techniques',
                 type: 'video',
-                duration: '19:20',
-                durationSeconds: 1160,
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
+                duration: '59:45',
+                durationSeconds: 3585,
+                videoUrl: 'https://youtu.be/zjkBMFhNj_g',
+                videoType: 'youtube',
                 content: 'Master structured outputs, few-shot prompting, chain-of-thought reasoning, system framing, temperature tuning, and preventing hallucinations.',
                 isFreePreview: true,
-                resources: [{ title: 'Prompt Engineering Cookbook', url: 'https://example.com/prompts.pdf', type: 'pdf' }],
+                resources: [
+                  { title: 'Advanced Prompt Engineering & Reasoning Handbook (PDF)', url: '/uploads/documents/prompt-engineering-cheatsheet.pdf', type: 'pdf', size: '1.8 MB' },
+                ],
               },
               {
                 title: 'Module 1 Quiz: LLM Architecture & Prompting',
@@ -466,20 +508,28 @@ const seedData = async () => {
               {
                 title: 'Vector Embeddings & High-Dimensional Semantic Spaces',
                 type: 'video',
-                duration: '15:10',
-                durationSeconds: 910,
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+                duration: '26:00',
+                durationSeconds: 1560,
+                videoUrl: 'https://www.youtube.com/watch?v=eMlx5fFNoYc',
+                videoType: 'youtube',
                 content: 'Explore text embedding models (OpenAI text-embedding-3, BGE), vector dimensionality, cosine similarity, Euclidean distance, and dot products.',
                 isFreePreview: false,
+                resources: [
+                  { title: 'High-Dimensional Vector Embeddings & Similarity Guide (PDF)', url: '/uploads/documents/rag-vector-db-handbook.pdf', type: 'pdf', size: '1.5 MB' },
+                ],
               },
               {
                 title: 'Building a Knowledge Store with Pinecone & ChromaDB',
                 type: 'video',
                 duration: '22:30',
                 durationSeconds: 1350,
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyBlazes.mp4',
+                videoUrl: 'https://www.youtube.com/watch?v=aywZrzNaKjs',
+                videoType: 'youtube',
                 content: 'Set up vector indices, implement metadata filtering, semantic partitioning, and perform sub-10ms similarity queries on enterprise documents.',
                 isFreePreview: false,
+                resources: [
+                  { title: 'ChromaDB & Pinecone Python Integration Code (ZIP)', url: 'https://github.com/chroma-core/chroma/archive/refs/tags/0.5.5.zip', type: 'archive', size: '3.2 MB' },
+                ],
               },
               {
                 title: 'Module 2 Assessment: Vector Search & Embeddings Quiz',
@@ -517,18 +567,26 @@ const seedData = async () => {
                 type: 'video',
                 duration: '24:45',
                 durationSeconds: 1485,
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+                videoUrl: 'https://www.youtube.com/watch?v=aywZrzNaKjs',
+                videoType: 'youtube',
                 content: 'Connect document loaders, text splitters, vector stores, and generative chat models using LangChain Expression Language (LCEL).',
                 isFreePreview: false,
+                resources: [
+                  { title: 'Enterprise RAG Architecture & LCEL Blueprint (PDF)', url: '/uploads/documents/rag-vector-db-handbook.pdf', type: 'pdf', size: '3.1 MB' },
+                ],
               },
               {
                 title: 'Building Autonomous AI Agents with Tool Calling & ReAct Loops',
                 type: 'video',
-                duration: '28:10',
-                durationSeconds: 1690,
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
+                duration: '34:20',
+                durationSeconds: 2060,
+                videoUrl: 'https://www.youtube.com/watch?v=kCc8FmEb1nY',
+                videoType: 'youtube',
                 content: 'Implement autonomous agents capable of web searching, SQL database querying, API execution, and iterative reasoning using the ReAct (Reason + Act) pattern.',
                 isFreePreview: false,
+                resources: [
+                  { title: 'Autonomous AI Agents & Tool Calling Specifications (PDF)', url: '/uploads/documents/autonomous-ai-agents-spec.pdf', type: 'pdf', size: '2.0 MB' },
+                ],
               },
               {
                 title: 'Module 3 Assessment: AI Agents & Pipeline Quiz',
@@ -1494,6 +1552,8 @@ const seedData = async () => {
 
     await Enrollment.create({
       student: studentUser._id,
+      studentName: studentUser.name,
+      studentEmail: studentUser.email,
       course: webDevCourse._id,
       progress: 60,
       completedLessons: [
@@ -1547,6 +1607,8 @@ const seedData = async () => {
 
     await Enrollment.create({
       student: studentUser._id,
+      studentName: studentUser.name,
+      studentEmail: studentUser.email,
       course: designCourse._id,
       progress: 100,
       completedLessons: [

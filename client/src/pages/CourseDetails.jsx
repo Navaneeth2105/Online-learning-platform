@@ -16,12 +16,14 @@ import {
   MessageSquare,
   Sparkles,
   ArrowRight,
+  Paperclip,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { RatingStars } from '../components/RatingStars';
 import { VideoPlayer } from '../components/VideoPlayer';
+import { PayPalCheckout } from '../components/PayPalCheckout';
 
 export const CourseDetails = () => {
   const { id } = useParams();
@@ -36,6 +38,7 @@ export const CourseDetails = () => {
   const [expandedModules, setExpandedModules] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isEnrolling, setIsEnrolling] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
 
   // Review Form
   const [newRating, setNewRating] = useState(5);
@@ -104,6 +107,11 @@ export const CourseDetails = () => {
     } finally {
       setIsEnrolling(false);
     }
+  };
+
+  const handlePaymentSuccess = (res) => {
+    addToast('Payment successful! Redirecting to classroom...', 'success');
+    navigate(`/learn/${res.enrollment.course}`);
   };
 
   const handleAddReview = async (e) => {
@@ -351,9 +359,11 @@ export const CourseDetails = () => {
                                 fontSize: '0.9rem',
                               }}
                             >
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
                                 {l.type === 'quiz' ? (
                                   <HelpCircle size={16} color="#a855f7" />
+                                ) : l.type === 'reading' ? (
+                                  <BookOpen size={16} color="#10b981" />
                                 ) : (
                                   <Play size={16} color="#6366f1" />
                                 )}
@@ -361,6 +371,11 @@ export const CourseDetails = () => {
                                 {l.isFreePreview && (
                                   <span className="badge badge-emerald" style={{ fontSize: '0.65rem' }}>
                                     Free Preview
+                                  </span>
+                                )}
+                                {l.resources && l.resources.length > 0 && (
+                                  <span className="badge badge-indigo" style={{ fontSize: '0.65rem', display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                    <Paperclip size={10} /> {l.resources.length} {l.resources.length === 1 ? 'doc' : 'docs'}
                                   </span>
                                 )}
                               </div>
@@ -523,16 +538,46 @@ export const CourseDetails = () => {
                 >
                   Continue Learning <ArrowRight size={18} />
                 </Link>
-              ) : (
-                <button
-                  onClick={handleEnroll}
-                  disabled={isEnrolling}
-                  className="btn btn-primary btn-lg"
-                  style={{ width: '100%', marginBottom: '1.2rem' }}
-                >
-                  {isEnrolling ? 'Enrolling...' : course.isFree ? 'Enroll for Free' : 'Enroll Now'}
-                </button>
-              )}
+              ) : course.isFree || course.price === 0 ? (
+                  <button
+                    onClick={handleEnroll}
+                    disabled={isEnrolling}
+                    className="btn btn-primary btn-lg"
+                    style={{ width: '100%', marginBottom: '1.2rem' }}
+                  >
+                    {isEnrolling ? 'Enrolling...' : 'Enroll for Free'}
+                  </button>
+                ) : showPayment ? (
+                  <div style={{ marginBottom: '1.2rem' }}>
+                    <PayPalCheckout
+                      courseId={course._id}
+                      onSuccess={handlePaymentSuccess}
+                      onError={(error) => addToast(error.message || 'Payment failed', 'error')}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPayment(false)}
+                      style={{ width: '100%', color: 'var(--text-secondary)', marginTop: '0.6rem', fontSize: '0.85rem' }}
+                    >
+                      Cancel payment
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => {
+                      if (!isAuthenticated) {
+                        addToast('Please login to purchase this course', 'info');
+                        navigate('/login');
+                        return;
+                      }
+                      setShowPayment(true);
+                    }}
+                    className="btn btn-primary btn-lg"
+                    style={{ width: '100%', marginBottom: '1.2rem' }}
+                  >
+                    Pay with PayPal
+                  </button>
+                )}
 
               {/* Course Includes List */}
               <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '1.2rem' }}>
@@ -548,6 +593,9 @@ export const CourseDetails = () => {
                   </li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Award size={14} color="#10b981" /> Verifiable Certificate of Completion
+                  </li>
+                  <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <FileText size={14} color="#06b6d4" /> Downloadable study guides & documents
                   </li>
                   <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <ShieldCheck size={14} color="#06b6d4" /> Full lifetime access on web & mobile

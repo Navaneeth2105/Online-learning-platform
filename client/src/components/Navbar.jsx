@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
-  GraduationCap,
   Search,
   Moon,
   Sun,
@@ -17,6 +16,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { LogoMark } from './LogoMark';
 
 export const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -56,7 +56,7 @@ export const Navbar = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          height: '74px',
+          height: '92px',
           gap: '1.5rem',
         }}
       >
@@ -72,17 +72,17 @@ export const Navbar = () => {
         >
           <div
             style={{
-              width: '42px',
-              height: '42px',
-              borderRadius: '12px',
-              background: 'var(--gradient-brand)',
+              width: '72px',
+              height: '72px',
+              flexShrink: 0,
+              borderRadius: 0,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 4px 12px rgba(99, 102, 241, 0.35)',
+              color: 'var(--text-primary)',
             }}
           >
-            <GraduationCap size={24} color="#ffffff" />
+            <LogoMark size={56} />
           </div>
           <div>
             <span

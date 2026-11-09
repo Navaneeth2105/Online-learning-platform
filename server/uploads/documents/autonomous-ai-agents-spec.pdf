@@ -1,0 +1,102 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 1356 >>
+stream
+BT
+/F1 20 Tf
+50 740 Td
+(Autonomous AI Agents & Multi-Agent Workflows) Tj
+ET
+BT
+/F1 12 Tf
+50 715 Td
+(ReAct Framework, Memory Stores, Tool Use & Orchestration) Tj
+ET
+BT
+/F1 10 Tf
+50 690 Td
+(SkillForge AI Engineering Series - Certified Curriculum Materials) Tj
+ET
+BT
+/F1 14 Tf
+50 650 Td
+(1. The ReAct (Reason + Act) Loop Pattern) Tj
+ET
+BT
+/F1 10 Tf
+60 628 Td
+(Thought: The agent verbalizes reasoning about the current sub-goal.) Tj
+ET
+BT
+/F1 10 Tf
+60 612 Td
+(Action: The agent calls an external tool Search, Database, Calculator, Python REPL.) Tj
+ET
+BT
+/F1 10 Tf
+60 596 Td
+(Observation: The agent reads tool execution output and updates internal state.) Tj
+ET
+BT
+/F1 14 Tf
+50 568 Td
+(2. Agent Memory & State Persistence) Tj
+ET
+BT
+/F1 10 Tf
+60 546 Td
+(Short-Term Memory: In-context conversational buffer and scratchpad traces.) Tj
+ET
+BT
+/F1 10 Tf
+60 530 Td
+(Long-Term Memory: Vector-indexed past episodes and user preferences.) Tj
+ET
+BT
+/F1 10 Tf
+60 514 Td
+(Semantic Cache: Fast lookup for frequent tool queries to reduce LLM latency and cost.) Tj
+ET
+BT
+/F1 14 Tf
+50 486 Td
+(3. Multi-Agent Collaboration Patterns) Tj
+ET
+BT
+/F1 10 Tf
+60 464 Td
+(Hierarchical Orchestrator: Supervisor agent delegates tasks to specialized worker subagents.) Tj
+ET
+BT
+/F1 10 Tf
+60 448 Td
+(Peer Critique: Evaluator agent critiques generated outputs against quality criteria.) Tj
+ET
+
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000234 00000 n 
+0000000300 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1726
+%%EOF

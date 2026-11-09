@@ -11,10 +11,30 @@ const getAuthHeaders = () => {
 };
 
 const handleResponse = async (response) => {
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message || 'Something went wrong');
+  const contentType = response.headers.get('content-type') || '';
+  const responseText = await response.text();
+  let data = {};
+
+  if (responseText.trim()) {
+    if (!contentType.includes('application/json')) {
+      throw new Error(
+        `API returned an unexpected response (${response.status} ${response.statusText}).`,
+      );
+    }
+
+    try {
+      data = JSON.parse(responseText);
+    } catch {
+      throw new Error(`API returned invalid JSON (${response.status} ${response.statusText}).`);
+    }
   }
+
+  if (!response.ok) {
+    throw new Error(
+      data.message || `Request failed (${response.status} ${response.statusText}).`,
+    );
+  }
+
   return data;
 };
 
@@ -78,6 +98,25 @@ export const api = {
   // Enrollments & Progress
   enrollInCourse: (courseId) =>
     fetch(`${API_BASE}/enrollments/enroll/${courseId}`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    }).then(handleResponse),
+
+  createPayPalOrder: (courseId) =>
+    fetch(`${API_BASE}/enrollments/paypal/order/${courseId}`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+    }).then(handleResponse),
+
+  capturePayPalOrder: (orderId) =>
+    fetch(`${API_BASE}/enrollments/paypal/capture`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ orderId }),
+    }).then(handleResponse),
+
+  createSamplePayment: (courseId) =>
+    fetch(`${API_BASE}/enrollments/sample-payment/${courseId}`, {
       method: 'POST',
       headers: getAuthHeaders(),
     }).then(handleResponse),
@@ -169,4 +208,32 @@ export const api = {
       method: 'DELETE',
       headers: getAuthHeaders(),
     }).then(handleResponse),
+
+  // File & Media Uploads
+  uploadDocument: (formData) => {
+    const token = localStorage.getItem('skillforge_token') || localStorage.getItem('edupulse_token');
+    return fetch(`${API_BASE}/upload/document`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    }).then(handleResponse);
+  },
+
+  uploadVideo: (formData) => {
+    const token = localStorage.getItem('skillforge_token') || localStorage.getItem('edupulse_token');
+    return fetch(`${API_BASE}/upload/video`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    }).then(handleResponse);
+  },
+
+  uploadImage: (formData) => {
+    const token = localStorage.getItem('skillforge_token') || localStorage.getItem('edupulse_token');
+    return fetch(`${API_BASE}/upload/image`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+    }).then(handleResponse);
+  },
 };

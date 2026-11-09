@@ -202,7 +202,7 @@ export const InstructorDashboard = () => {
                               {c.title}
                             </div>
                             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                              {c.modules?.length || 0} modules • {c.totalLessons || 0} lessons
+                              {c.modules?.length || 0} modules • {c.totalLessons || 0} lessons{c.resources?.length ? ` • ${c.resources.length} documents` : ''}
                             </span>
                           </div>
                         </td>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { GraduationCap, Github, Twitter, Linkedin, Heart, Shield, Award, Sparkles } from 'lucide-react';
+import { Github, Twitter, Linkedin, Heart, Shield, Award, Sparkles } from 'lucide-react';
+import { LogoMark } from './LogoMark';
 
 export const Footer = () => {
   return (
@@ -37,14 +38,14 @@ export const Footer = () => {
                 style={{
                   width: '36px',
                   height: '36px',
-                  borderRadius: '10px',
-                  background: 'var(--gradient-brand)',
+                  borderRadius: 0,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  color: 'var(--text-primary)',
                 }}
               >
-                <GraduationCap size={20} color="#ffffff" />
+                <LogoMark size={24} />
               </div>
               <span
                 style={{

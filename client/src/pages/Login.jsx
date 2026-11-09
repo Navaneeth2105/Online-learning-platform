@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { LogIn, Sparkles, User, Shield, GraduationCap, Lock, Mail } from 'lucide-react';
+import { LogIn, Sparkles, User, Shield, Lock, Mail } from 'lucide-react';
+import { LogoMark } from '../components/LogoMark';
 import { useAuth } from '../context/AuthContext';
 
 export const Login = () => {
@@ -69,16 +70,15 @@ export const Login = () => {
             style={{
               width: '50px',
               height: '50px',
-              borderRadius: '14px',
-              background: 'var(--gradient-brand)',
+              borderRadius: 0,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 1rem',
-              boxShadow: '0 4px 15px rgba(99, 102, 241, 0.4)',
+              color: 'var(--text-primary)',
             }}
           >
-            <GraduationCap size={28} color="#ffffff" />
+            <LogoMark size={32} />
           </div>
           <h1 style={{ fontSize: '1.8rem', marginBottom: '0.4rem' }}>Welcome Back</h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>

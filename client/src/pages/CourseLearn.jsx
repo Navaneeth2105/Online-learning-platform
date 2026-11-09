@@ -16,6 +16,10 @@ import {
   Sparkles,
   Download,
   ExternalLink,
+  BookOpen,
+  FolderDown,
+  File,
+  Paperclip,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { api } from '../services/api';
@@ -332,8 +336,41 @@ export const CourseLearn = () => {
                   <Sparkles size={18} /> Launch Assessment Quiz
                 </button>
               </div>
+            ) : currentLesson.type === 'reading' ? (
+              /* Reading / Document Lesson Article */
+              <div
+                className="glass-panel"
+                style={{
+                  padding: '2.5rem',
+                  borderRadius: 'var(--radius-lg)',
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-glass)',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem', color: '#10b981' }}>
+                  <BookOpen size={22} />
+                  <span style={{ fontSize: '0.85rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Reading Lecture • {currentLesson.duration || '08:00'} min read
+                  </span>
+                </div>
+                <h1 style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>{currentLesson.title}</h1>
+                <div
+                  style={{
+                    fontSize: '1rem',
+                    lineHeight: '1.8',
+                    color: 'var(--text-primary)',
+                    whiteSpace: 'pre-wrap',
+                    background: 'var(--bg-tertiary)',
+                    padding: '1.5rem',
+                    borderRadius: 'var(--radius-md)',
+                    border: '1px solid var(--border-subtle)',
+                  }}
+                >
+                  {currentLesson.content || 'Please refer to the lecture summary and attached documents below to complete this reading lesson.'}
+                </div>
+              </div>
             ) : (
-              /* Custom Video Player */
+              /* Custom Video Player (Supports YouTube, Vimeo, Uploaded MP4) */
               <div>
                 <VideoPlayer
                   videoUrl={currentLesson.videoUrl || course.previewVideo}
@@ -394,7 +431,7 @@ export const CourseLearn = () => {
           {currentLesson.resources && currentLesson.resources.length > 0 && (
             <div className="glass-panel" style={{ padding: '1.5rem', borderRadius: 'var(--radius-md)', marginBottom: '2rem' }}>
               <h3 style={{ fontSize: '1.05rem', marginBottom: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <FileText size={18} color="var(--brand-primary)" /> Lecture Resources & Attachments
+                <FileText size={18} color="var(--brand-primary)" /> Lecture Resources & Downloadable Materials
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                 {currentLesson.resources.map((res, rIdx) => (
@@ -418,10 +455,13 @@ export const CourseLearn = () => {
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                       <Download size={16} color="var(--brand-primary)" />
-                      <span>{res.title || 'Lecture Resource File'}</span>
+                      <span style={{ fontWeight: '600' }}>{res.title || 'Lecture Resource File'}</span>
                       <span className="badge badge-indigo" style={{ fontSize: '0.65rem' }}>
-                        {res.type || 'file'}
+                        {(res.type || 'file').toUpperCase()}
                       </span>
+                      {res.size && (
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>({res.size})</span>
+                      )}
                     </div>
                     <ExternalLink size={14} color="var(--text-muted)" />
                   </a>
@@ -474,6 +514,53 @@ export const CourseLearn = () => {
                 {enrollment?.completedLessons?.length || 0} of {course.modules.reduce((a, m) => a + (m.lessons?.length || 0), 0)} completed
               </p>
             </div>
+
+            {/* Course-Wide Materials / Documents */}
+            {course.resources && course.resources.length > 0 && (
+              <div
+                style={{
+                  margin: '0.8rem 0.8rem 0',
+                  padding: '0.8rem',
+                  background: 'rgba(168, 85, 247, 0.08)',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid rgba(168, 85, 247, 0.25)',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <FolderDown size={15} color="#a855f7" />
+                  <span style={{ fontSize: '0.8rem', fontWeight: '700', color: 'var(--text-primary)' }}>
+                    Course Documents & Resources ({course.resources.length})
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  {course.resources.map((res, rIdx) => (
+                    <a
+                      key={rIdx}
+                      href={res.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '0.4rem 0.6rem',
+                        background: 'var(--bg-secondary)',
+                        borderRadius: '4px',
+                        fontSize: '0.75rem',
+                        color: 'var(--text-primary)',
+                        textDecoration: 'none',
+                        border: '1px solid var(--border-subtle)',
+                      }}
+                    >
+                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '170px' }}>
+                        {res.title}
+                      </span>
+                      <Download size={13} color="var(--brand-primary)" style={{ flexShrink: 0 }} />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Modules Accordion */}
             <div style={{ padding: '0.8rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
@@ -549,9 +636,14 @@ export const CourseLearn = () => {
                             >
                               {lesson.title}
                             </div>
-                            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                              {lesson.type === 'quiz' ? 'Quiz Assessment' : lesson.duration || '10:00'}
-                            </span>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                              <span>{lesson.type === 'quiz' ? 'Quiz Assessment' : lesson.type === 'reading' ? 'Reading' : 'Video'} • {lesson.duration || '10:00'}</span>
+                              {lesson.resources && lesson.resources.length > 0 && (
+                                <span title={`${lesson.resources.length} document attachment(s)`} style={{ display: 'inline-flex', alignItems: 'center', gap: '2px', color: 'var(--brand-primary)' }}>
+                                  <Paperclip size={12} /> {lesson.resources.length}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </button>
                       );

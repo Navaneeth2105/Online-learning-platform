@@ -25,6 +25,8 @@ const enrollmentSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+    studentName: { type: String, required: true },
+    studentEmail: { type: String, required: true },
     course: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Course',
@@ -64,6 +66,17 @@ const enrollmentSchema = new mongoose.Schema(
     enrolledAt: {
       type: Date,
       default: Date.now,
+    },
+    paymentProvider: {
+      type: String,
+      enum: ['paypal', 'sample'],
+    },
+    paymentId: {
+      type: String,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ['completed'],
     },
   },
   {

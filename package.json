@@ -2,7 +2,7 @@
   "name": "skillforge-online-learning-platform",
   "version": "1.0.0",
   "description": "Full-Stack MERN Online Learning Platform with interactive video playback, timestamped notes, real-time quizzes, and verifiable certificates.",
-  "main": "server/server.js",
+  "main": "app.js",
   "scripts": {
     "start": "cd server && npm start",
     "server": "cd server && npm run dev",

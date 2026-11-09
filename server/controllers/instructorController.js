@@ -150,6 +150,7 @@ const createCourse = async (req, res, next) => {
       thumbnail: thumbnail || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80',
       previewVideo: previewVideo || 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
       instructor: req.user._id,
+      resources: req.body.resources || [],
       modules: modules && modules.length > 0 ? modules : [
         {
           title: 'Introduction to the Course',

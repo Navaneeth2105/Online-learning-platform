@@ -7,7 +7,11 @@ const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 const Course = require('./models/Course');
 const seedData = require('./seeders/seed');
 
-// Load environment variables
+const path = require('path');
+const fs = require('fs');
+
+// Load environment variables (from server/.env or root)
+dotenv.config({ path: path.join(__dirname, '.env') });
 dotenv.config();
 
 const app = express();
@@ -21,15 +25,21 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+// Mount Static Uploads
+const uploadsPath = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath, { recursive: true });
+}
+app.use('/uploads', express.static(uploadsPath));
+
 // Mount API Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/courses', require('./routes/courseRoutes'));
 app.use('/api/enrollments', require('./routes/enrollmentRoutes'));
 app.use('/api/reviews', require('./routes/reviewRoutes'));
 app.use('/api/instructor', require('./routes/instructorRoutes'));
+app.use('/api/upload', require('./routes/uploadRoutes'));
 
-const path = require('path');
-const fs = require('fs');
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

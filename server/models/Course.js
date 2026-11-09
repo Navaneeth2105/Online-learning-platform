@@ -1,5 +1,30 @@
 const mongoose = require('mongoose');
 
+const resourceSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  url: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: ['pdf', 'document', 'slides', 'code', 'link', 'video', 'archive', 'other'],
+    default: 'pdf',
+  },
+  size: {
+    type: String,
+    default: '',
+  },
+  filename: {
+    type: String,
+    default: '',
+  },
+});
+
 const lessonSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -23,17 +48,16 @@ const lessonSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+  videoType: {
+    type: String,
+    enum: ['upload', 'url', 'youtube', 'vimeo'],
+    default: 'url',
+  },
   content: {
     type: String,
     default: '',
   },
-  resources: [
-    {
-      title: String,
-      url: String,
-      type: { type: String, default: 'pdf' },
-    },
-  ],
+  resources: [resourceSchema],
   quiz: {
     title: { type: String, default: '' },
     passingScore: { type: Number, default: 70 },
@@ -138,6 +162,7 @@ const courseSchema = new mongoose.Schema(
       required: true,
     },
     modules: [moduleSchema],
+    resources: [resourceSchema],
     tags: [{ type: String }],
     whatYouWillLearn: [{ type: String }],
     requirements: [{ type: String }],
