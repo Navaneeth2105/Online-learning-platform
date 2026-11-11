@@ -1,2 +1,25 @@
-node_modules
+# ─── Dependencies ────────────────────────────────────────────────────────────
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# ─── Environment files (never commit secrets) ────────────────────────────────
+.env
+.env.local
+.env.*.local
 server/.env
+client/.env
+client/.env.local
+
+# ─── Build output ─────────────────────────────────────────────────────────────
+client/dist/
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+
+# ─── OS / Editor ─────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/settings.json
+

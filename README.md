@@ -14,6 +14,7 @@ For Learners & Students
  **Public Credential Ledger**: Dedicated `/verify` page where anyone can look up and authenticate completion certificates.
  **Course Discovery & Filtering**: Search by keyword, multi-category chips, difficulty level, price type (free/paid), and sorting options.
  **Student Dashboard & Profile**: Track active vs. completed courses, certificate collections, profile bios, and credentials.
+ **PayPal Payment Gateway**: Secure course purchases via PayPal (sandbox & live modes). Falls back to a sample payment button in local dev without PayPal credentials.
 
 👩‍🏫 For Instructors & Creators
  Creator Studio Analytics**: Monitor total enrolled students, estimated gross revenue, course counts, and average star ratings.
@@ -36,6 +37,7 @@ Tech Stack
 | **Backend** | Node.js, Express 4, Morgan logger, CORS, Dotenv |
 | **Database** | MongoDB with Mongoose 8 & MongoDB Memory Server (zero-config fallback) |
 | **Authentication** | JWT (JSON Web Tokens) & BcryptJS password hashing |
+| **Payments** | PayPal REST API (sandbox & live) via `@paypal/react-paypal-js` |
 
 ---
 
@@ -45,21 +47,23 @@ text
 Online-Learning-Platform/
 ├── client/                      # Frontend Single Page App
 │   ├── src/
-│   │   ├── components/          # Reusable UI (Navbar, Footer, VideoPlayer, QuizModal, etc.)
+│   │   ├── components/          # Reusable UI (Navbar, Footer, VideoPlayer, QuizModal, PayPalCheckout, etc.)
 │   │   ├── context/             # React Context (Auth, Theme, Toast)
 │   │   ├── pages/               # Views (Home, Courses, CourseDetails, CourseLearn, etc.)
 │   │   ├── services/            # API Client wrapper
 │   │   └── styles/              # Global CSS tokens and component stylesheets
+│   ├── .env.example             # Client environment variable template
 │   ├── index.html               # Main HTML entry with typography
 │   └── vite.config.js           # Vite configuration & proxy settings
 │
 ├── server/                      # Backend API Server
 │   ├── config/                  # Database connectivity & memory server
-│   ├── controllers/             # Auth, Course, Enrollment, Instructor, Review handlers
+│   ├── controllers/             # Auth, Course, Enrollment, Instructor, Review, Payment handlers
 │   ├── middleware/              # Auth protect, OptionalProtect, Role auth, Error handling
 │   ├── models/                  # Mongoose schemas (User, Course, Enrollment, Review)
 │   ├── routes/                  # Express RESTful endpoints
 │   ├── seeders/                 # Realistic mock data and database seeder
+│   ├── .env.example             # Server environment variable template
 │   └── server.js                # Server entry point with static client serving
 │
 ├── package.json                 # Monorepo root scripts (dev, build, start)
@@ -77,20 +81,71 @@ Install dependencies for both server and client:
 npm run install-all
 ```
 
-2. Running in Development Mode
+2. Environment Setup
+
+**Server** — copy the template and fill in your values:
+```bash
+cp server/.env.example server/.env
+```
+
+**Client** — copy the template (only needed for real PayPal integration):
+```bash
+cp client/.env.example client/.env
+```
+
+3. Running in Development Mode
 Start both backend API (`port 5000`) and Vite client (`port 3000`) concurrently:
 ```bash
 npm run dev
 ```
 Open your browser at `http://localhost:3000/`.
 
-3. Production Build & Serving
+> **No MongoDB?** No problem — the server automatically starts an in-memory MongoDB instance on first boot.
+
+4. Production Build & Serving
 Build the optimized frontend distribution and start the server:
 ```bash
 npm run build
 npm start
 ```
 The full application will be accessible at `http://localhost:5000/`.
+
+
+
+💳 Payment Integration (PayPal)
+
+SkillForge uses **PayPal** as its payment gateway for paid course purchases.
+
+### Development (no credentials needed)
+Leave `PAYPAL_CLIENT_ID` empty in `server/.env` and `VITE_PAYPAL_CLIENT_ID` empty in `client/.env`.  
+A **"Complete Sample Payment"** button will appear instead, which instantly creates an enrollment — perfect for local testing.
+
+### Setting up real PayPal payments
+
+1. Go to [PayPal Developer Dashboard](https://developer.paypal.com/dashboard/) and create a **REST API app**.
+2. Copy the **Client ID** and **Client Secret** (use *Sandbox* credentials for testing, *Live* for production).
+3. Add them to `server/.env`:
+   ```
+   PAYPAL_CLIENT_ID=your_client_id
+   PAYPAL_CLIENT_SECRET=your_client_secret
+   PAYPAL_MODE=sandbox         # change to "live" for production
+   PAYPAL_CURRENCY=INR         # or USD, EUR, etc.
+   ```
+4. Add the Client ID to `client/.env`:
+   ```
+   VITE_PAYPAL_CLIENT_ID=your_client_id
+   VITE_PAYPAL_CURRENCY=INR
+   ```
+5. Restart both server and client — the PayPal button will appear on paid course pages.
+
+### Payment Flow
+```
+User clicks "Pay with PayPal"
+  → POST /api/enrollments/paypal/order/:courseId  (creates PayPal order)
+  → PayPal popup / redirect for user approval
+  → POST /api/enrollments/paypal/capture           (captures payment & creates enrollment)
+  → Redirect to /learn/:courseId
+```
 
 
 
@@ -122,7 +177,10 @@ Authentication (`/api/auth`)
 - `GET /api/courses/:id/learn` — Get full curriculum and progress (for enrolled students)
 
 Enrollments & Learning (`/api/enrollments`)
-- `POST /api/enrollments/enroll/:courseId` — Enroll in a course
+- `POST /api/enrollments/enroll/:courseId` — Enroll in a free course
+- `POST /api/enrollments/paypal/order/:courseId` — Create a PayPal order for a paid course
+- `POST /api/enrollments/paypal/capture` — Capture PayPal payment & create enrollment
+- `POST /api/enrollments/sample-payment/:courseId` — Dev-only sample payment (no PayPal needed)
 - `GET /api/enrollments/my-learning` — Get all enrolled courses for current user
 - `POST /api/enrollments/:courseId/progress` — Toggle lesson completion status
 - `POST /api/enrollments/:courseId/quiz` — Submit quiz answers for instant grading
