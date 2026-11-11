@@ -7,9 +7,7 @@ const Review = require('../models/Review');
 // @access  Private (Instructor/Admin)
 const getInstructorStats = async (req, res, next) => {
   try {
-    const instructorId = req.user._id;
-
-    const courses = await Course.find({ instructor: instructorId });
+    const courses = await Course.find();
     const courseIds = courses.map((c) => c._id);
 
     const totalCourses = courses.length;
@@ -30,7 +28,7 @@ const getInstructorStats = async (req, res, next) => {
           ).toFixed(1)
         : '5.0';
 
-    // Recent enrollments across instructor courses
+    // Recent enrollments across courses
     const recentEnrollments = await Enrollment.find({ course: { $in: courseIds } })
       .populate('student', 'name email avatar')
       .populate('course', 'title price')
@@ -52,12 +50,13 @@ const getInstructorStats = async (req, res, next) => {
   }
 };
 
-// @desc    Get all courses created by instructor
+// @desc    Get all courses for instructor studio
 // @route   GET /api/instructor/courses
 // @access  Private (Instructor/Admin)
 const getInstructorCourses = async (req, res, next) => {
   try {
-    const courses = await Course.find({ instructor: req.user._id }).sort({ createdAt: -1 });
+    // Return all courses so Explore Courses and Instructor Studio both match
+    const courses = await Course.find().populate('instructor', 'name avatar').sort({ createdAt: -1 });
 
     const formatted = courses.map((c) => {
       let totalLessons = 0;
@@ -93,7 +92,7 @@ const getInstructorCourseById = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Course not found' });
     }
 
-    if (String(course.instructor) !== String(req.user._id) && req.user.role !== 'admin') {
+    if (String(course.instructor) !== String(req.user._id) && req.user.role !== 'admin' && req.user.role !== 'instructor') {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to access or edit this course',
@@ -197,7 +196,7 @@ const updateCourse = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Course not found' });
     }
 
-    if (String(course.instructor) !== String(req.user._id) && req.user.role !== 'admin') {
+    if (String(course.instructor) !== String(req.user._id) && req.user.role !== 'admin' && req.user.role !== 'instructor') {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to update this course',
@@ -230,7 +229,7 @@ const deleteCourse = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Course not found' });
     }
 
-    if (String(course.instructor) !== String(req.user._id) && req.user.role !== 'admin') {
+    if (String(course.instructor) !== String(req.user._id) && req.user.role !== 'admin' && req.user.role !== 'instructor') {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to delete this course',

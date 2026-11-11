@@ -23,8 +23,24 @@ const seedData = async () => {
     console.log('Creating demo users...');
 
     const instructor1 = await User.create({
-      name: 'Dr. Sarah Jenkins',
+      name: 'dhanush',
       email: 'instructor@skillforge.com',
+      password: 'password123',
+      role: 'instructor',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
+      headline: 'Principal AI Researcher & Ex-Google Staff Engineer',
+      bio: 'Over 12 years of industry experience teaching more than 150,000 students worldwide in modern web architecture, AI, and distributed systems.',
+      skills: ['React', 'Node.js', 'Python', 'Machine Learning', 'System Design'],
+      socialLinks: {
+        github: 'https://github.com',
+        linkedin: 'https://linkedin.com',
+        twitter: 'https://twitter.com',
+      },
+    });
+
+    await User.create({
+      name: 'dhanush',
+      email: 'dhanushkummara7@gmail.com',
       password: 'password123',
       role: 'instructor',
       avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
@@ -675,7 +691,7 @@ const seedData = async () => {
         isFree: true,
         thumbnail: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=1000&q=80',
         previewVideo: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-        instructor: instructor3._id,
+        instructor: instructor1._id,
         isFeatured: true,
         rating: 4.8,
         reviewsCount: 412,
@@ -845,7 +861,7 @@ const seedData = async () => {
         isFree: false,
         thumbnail: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1000&q=80',
         previewVideo: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        instructor: instructor2._id,
+        instructor: instructor1._id,
         isFeatured: true,
         rating: 4.9,
         reviewsCount: 145,
@@ -1170,7 +1186,7 @@ const seedData = async () => {
         isFree: false,
         thumbnail: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1000&q=80',
         previewVideo: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        instructor: instructor2._id,
+        instructor: instructor1._id,
         isFeatured: false,
         rating: 4.9,
         reviewsCount: 98,

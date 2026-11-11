@@ -18,3 +18,4 @@ export const LogoMark = ({ size = 24 }) => (
     <path d="M14 34C20 33 25 35 29 39L32 43L35 39C39 35 44 33 50 34L52 38C45 37 40 38 36 42L32 47L28 42C24 38 19 37 12 38L14 34Z" fill="currentColor" />
   </svg>
 );
+

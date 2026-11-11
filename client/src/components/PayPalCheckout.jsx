@@ -52,3 +52,4 @@ export const PayPalCheckout = ({ courseId, onSuccess, onError }) => {
     </PayPalScriptProvider>
   );
 };
+

@@ -100,70 +100,72 @@ export const Navbar = () => {
         </Link>
 
         {/* Global Search Bar */}
-        <form
-          onSubmit={handleSearchSubmit}
-          style={{
-            flex: '1',
-            maxWidth: '380px',
-            position: 'relative',
-            display: 'none',
-          }}
-          className="desktop-search"
-        >
-          <Search
-            size={18}
-            color="var(--text-muted)"
+        {isAuthenticated && (
+          <form
+            onSubmit={handleSearchSubmit}
             style={{
-              position: 'absolute',
-              left: '12px',
-              top: '50%',
-              transform: 'translateY(-50%)',
+              flex: '1',
+              maxWidth: '380px',
+              position: 'relative',
+              display: 'none',
             }}
-          />
-          <input
-            type="text"
-            placeholder="Search courses, skills, topics..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '0.6rem 1rem 0.6rem 2.4rem',
-              borderRadius: 'var(--radius-full)',
-              background: 'var(--bg-input)',
-              border: '1px solid var(--border-glass)',
-              color: 'var(--text-primary)',
-              fontSize: '0.875rem',
-              outline: 'none',
-              transition: 'border-color 0.2s',
-            }}
-          />
-        </form>
+            className="desktop-search"
+          >
+            <Search
+              size={18}
+              color="var(--text-muted)"
+              style={{
+                position: 'absolute',
+                left: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+              }}
+            />
+            <input
+              type="text"
+              placeholder="Search courses, skills, topics..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.6rem 1rem 0.6rem 2.4rem',
+                borderRadius: 'var(--radius-full)',
+                background: 'var(--bg-input)',
+                border: '1px solid var(--border-glass)',
+                color: 'var(--text-primary)',
+                fontSize: '0.875rem',
+                outline: 'none',
+                transition: 'border-color 0.2s',
+              }}
+            />
+          </form>
+        )}
 
         {/* Desktop Navigation Links */}
-        <nav
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1.5rem',
-          }}
-          className="desktop-nav"
-        >
-          <Link
-            to="/courses"
+        {isAuthenticated && (
+          <nav
             style={{
-              fontSize: '0.925rem',
-              fontWeight: '500',
-              color: isActive('/courses') ? 'var(--brand-primary)' : 'var(--text-secondary)',
-              transition: 'color 0.2s',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
+              gap: '1.5rem',
             }}
+            className="desktop-nav"
           >
-            <BookOpen size={16} /> Explore Courses
-          </Link>
+            <Link
+              to="/courses"
+              style={{
+                fontSize: '0.925rem',
+                fontWeight: '500',
+                color: isActive('/courses') ? 'var(--brand-primary)' : 'var(--text-secondary)',
+                transition: 'color 0.2s',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+              }}
+            >
+              <BookOpen size={16} /> Explore Courses
+            </Link>
 
-          {isAuthenticated && (
             <Link
               to="/dashboard"
               style={{
@@ -178,39 +180,39 @@ export const Navbar = () => {
             >
               <LayoutDashboard size={16} /> My Learning
             </Link>
-          )}
 
-          {isAuthenticated && (user?.role === 'instructor' || user?.role === 'admin') && (
+            {(user?.role === 'instructor' || user?.role === 'admin') && (
+              <Link
+                to="/instructor"
+                style={{
+                  fontSize: '0.925rem',
+                  fontWeight: '600',
+                  color: isActive('/instructor') ? 'var(--brand-secondary)' : 'var(--text-secondary)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                }}
+              >
+                <Sparkles size={16} color="#a855f7" /> Instructor Studio
+              </Link>
+            )}
+
             <Link
-              to="/instructor"
+              to="/verify"
               style={{
                 fontSize: '0.925rem',
-                fontWeight: '600',
-                color: isActive('/instructor') ? 'var(--brand-secondary)' : 'var(--text-secondary)',
+                fontWeight: '500',
+                color: isActive('/verify') ? 'var(--brand-primary)' : 'var(--text-secondary)',
+                transition: 'color 0.2s',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.4rem',
               }}
             >
-              <Sparkles size={16} color="#a855f7" /> Instructor Studio
+              <ShieldCheck size={16} /> Verify Certificate
             </Link>
-          )}
-
-          <Link
-            to="/verify"
-            style={{
-              fontSize: '0.925rem',
-              fontWeight: '500',
-              color: isActive('/verify') ? 'var(--brand-primary)' : 'var(--text-secondary)',
-              transition: 'color 0.2s',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-            }}
-          >
-            <ShieldCheck size={16} /> Verify Certificate
-          </Link>
-        </nav>
+          </nav>
+        )}
 
         {/* Right Action Icons & Auth Buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
@@ -380,30 +382,23 @@ export const Navbar = () => {
                 </div>
               )}
             </div>
-          ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <Link to="/login" className="btn btn-secondary btn-sm">
-                Log In
-              </Link>
-              <Link to="/register" className="btn btn-primary btn-sm">
-                Get Started
-              </Link>
-            </div>
-          )}
+          ) : null}
 
           {/* Mobile Hamburger Button */}
-          <button
-            onClick={() => setMobileNavOpen((prev) => !prev)}
-            className="btn-icon mobile-menu-btn"
-            style={{ display: 'none' }}
-          >
-            {mobileNavOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          {isAuthenticated && (
+            <button
+              onClick={() => setMobileNavOpen((prev) => !prev)}
+              className="btn-icon mobile-menu-btn"
+              style={{ display: 'none' }}
+            >
+              {mobileNavOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          )}
         </div>
       </div>
 
       {/* Mobile Drawer */}
-      {mobileNavOpen && (
+      {isAuthenticated && mobileNavOpen && (
         <div
           style={{
             background: 'var(--bg-secondary)',
