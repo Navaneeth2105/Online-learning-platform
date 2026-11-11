@@ -1,41 +1,34 @@
 const mongoose = require('mongoose');
 
-const { MongoMemoryServer } = require('mongodb-memory-server');
-
-let mongoServer;
+let mongoServer = null;
 
 const connectDB = async () => {
   try {
     let mongoUri = process.env.MONGODB_URI;
 
     if (mongoUri && mongoUri.trim() !== '') {
+      // Production: use the provided MongoDB URI (Atlas, etc.)
       console.log('Connecting to provided MongoDB URI...');
       const conn = await mongoose.connect(mongoUri);
       console.log(`MongoDB Connected (URI): ${conn.connection.host}`);
     } else {
-      console.log('No MONGODB_URI provided. Starting in-memory MongoDB server for standalone zero-config execution...');
+      // Development fallback: use in-memory MongoDB
+      console.log('No MONGODB_URI provided. Starting in-memory MongoDB...');
+      let MongoMemoryServer;
+      try {
+        ({ MongoMemoryServer } = require('mongodb-memory-server'));
+      } catch (e) {
+        console.error('mongodb-memory-server not available. Please set MONGODB_URI env variable.');
+        process.exit(1);
+      }
       mongoServer = await MongoMemoryServer.create();
       const inMemoryUri = mongoServer.getUri();
       const conn = await mongoose.connect(inMemoryUri);
-      console.log(`MongoDB Connected (In-Memory Server): ${conn.connection.host}`);
+      console.log(`MongoDB Connected (In-Memory): ${conn.connection.host}`);
     }
   } catch (error) {
     console.error(`MongoDB Connection Error: ${error.message}`);
-    // If external URI failed, attempt memory server fallback
-    if (!mongoServer) {
-      try {
-        console.log('Attempting in-memory MongoDB fallback...');
-        mongoServer = await MongoMemoryServer.create();
-        const inMemoryUri = mongoServer.getUri();
-        const conn = await mongoose.connect(inMemoryUri);
-        console.log(`MongoDB Connected (Fallback In-Memory): ${conn.connection.host}`);
-      } catch (memError) {
-        console.error(`Failed to initialize in-memory DB: ${memError.message}`);
-        process.exit(1);
-      }
-    } else {
-      process.exit(1);
-    }
+    process.exit(1);
   }
 };
 
